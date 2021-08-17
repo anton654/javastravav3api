@@ -1,10 +1,5 @@
 package javastrava.json.impl.gson.serializer;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
-import javastrava.api.v3.model.StravaMapPoint;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -12,6 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import javastrava.api.v3.model.StravaMapPoint;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  * @author Dan Shannon
@@ -39,7 +38,11 @@ public class MapPointSerializer implements JsonDeserializer<StravaMapPoint>, Jso
 	public StravaMapPoint deserialize(final JsonElement element, final Type type, final JsonDeserializationContext context)
 			throws JsonParseException {
 		JsonArray array = element.getAsJsonArray();
-		return new StravaMapPoint(Float.valueOf(array.get(0).getAsFloat()), Float.valueOf(array.get(1).getAsFloat()));
+		if (array.size() < 2) {
+			// empty array
+			return null;
+		}
+		return new StravaMapPoint(array.get(0).getAsFloat(), array.get(1).getAsFloat());
 	}
 
 }
